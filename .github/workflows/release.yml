@@ -1,10 +1,17 @@
 name: Build and Create Installer
 
+# Permission to write to the Release page
+permissions:
+  contents: write
+
 on:
   push:
     branches:
       - releases
       - main
+  # Trigger when you create a release in the UI
+  release:
+    types: [created]
   workflow_dispatch:
 
 jobs:
@@ -31,15 +38,29 @@ jobs:
       - name: Create Artifacts Directory
         run: mkdir -p build/artifacts
 
+      - name: Prepare Staging Directory
+        run: |
+          mkdir -p build/staging
+          cp -R build/Build/Products/Release/DontDuckWithMyMac.app build/staging/
+
       - name: Generate macOS Installer (.pkg)
         uses: akiojin/generate-mac-installer-github-action@v1.0.4
         with:
-          bundle-path: build/Build/Products/Release/DontDuckWithMyMac.app
+          root-directory: build/staging
+          bundle-path: build/staging/DontDuckWithMyMac.app
           version: '1.0.0'
           output-directory: build/artifacts
 
+      # Upload to the Action Summary (Artifacts tab)
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
           path: build/artifacts/
+
+      # NEW: Upload the .pkg to the Release page
+      - name: Upload to Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/artifacts/DontDuckWithMyMac.pkg
