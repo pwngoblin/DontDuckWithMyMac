@@ -1,9 +1,18 @@
-name: Build and Create DMG
+name: Build and Create Installer
+
+# Permission to write to the Release page
+permissions:
+  contents: write
 
 on:
   push:
     branches:
       - releases
+      - main
+  # Trigger when you create a release in the UI
+  release:
+    types: [created]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,7 +24,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build App
-        # Builds the app in Release mode using Ad-Hoc signing (no Apple ID required)
         run: |
           xcodebuild \
             -project DontDuckWithMyMac.xcodeproj \
@@ -27,14 +35,6 @@ jobs:
             CODE_SIGNING_REQUIRED="NO" \
             CODE_SIGNING_ALLOWED="NO"
 
-<<<<<<< Updated upstream
-      - name: Generate macOS Installer
-        uses: akiojin/generate-mac-installer-github-action@v1.0.4
-        with:
-          app_path: build/Build/Products/Release/DontDuckWithMyMac.app
-          type: dmg
-          output_name: DontDuckWithMyMac.dmg
-=======
       - name: Create Artifacts Directory
         run: mkdir -p build/artifacts
 
@@ -52,30 +52,33 @@ jobs:
             -srcfolder "build/staging" \
             -ov -format UDZO \
             "build/artifacts/DontDuckWithMyMac.dmg"
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
-      - name: Upload DMG Artifact
+      - name: Create Artifacts Directory
+        run: mkdir -p build/artifacts
+
+      - name: Prepare Staging Directory
+        run: |
+          mkdir -p build/staging
+          cp -R build/Build/Products/Release/DontDuckWithMyMac.app build/staging/
+
+      - name: Generate macOS Installer (.pkg)
+        uses: akiojin/generate-mac-installer-github-action@v1.0.4
+        with:
+          root-directory: build/staging
+          # FIX: Use relative path (just the filename) because it is joined with root-directory
+          bundle-path: DontDuckWithMyMac.app
+          version: '1.0.0'
+          output-directory: build/artifacts
+
+      # Upload to the Action Summary (Artifacts tab)
+      - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          path: DontDuckWithMyMac.dmg
-=======
-=======
->>>>>>> Stashed changes
           path: build/artifacts/DontDuckWithMyMac.dmg
 
-      # Upload the .dmg to the Release page
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
           files: build/artifacts/DontDuckWithMyMac.dmg
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
