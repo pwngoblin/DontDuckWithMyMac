@@ -1,5 +1,7 @@
 DontDuckWithMyMac 🦆🛑
 
+[![Build and Create Installer](https://github.com/pwngoblin/DontDuckWithMyMac/actions/workflows/release.yml/badge.svg)](https://github.com/pwngoblin/DontDuckWithMyMac/actions/workflows/release.yml)
+
 I made this shit completely with AI, dont care about code bc didnt have time.
 
 What does it do?
