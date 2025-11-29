@@ -1,9 +1,11 @@
-name: Build and Create DMG
+name: Build and Create Installer
 
 on:
   push:
     branches:
       - releases
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build App
-        # Builds the app in Release mode using Ad-Hoc signing (no Apple ID required)
         run: |
           xcodebuild \
             -project DontDuckWithMyMac.xcodeproj \
@@ -27,15 +28,19 @@ jobs:
             CODE_SIGNING_REQUIRED="NO" \
             CODE_SIGNING_ALLOWED="NO"
 
-      - name: Generate macOS Installer
+      - name: Generate macOS Installer (.pkg)
         uses: akiojin/generate-mac-installer-github-action@v1.0.4
         with:
-          app_path: build/Build/Products/Release/DontDuckWithMyMac.app
-          type: dmg
-          output_name: DontDuckWithMyMac.dmg
+          # Correct input for the app bundle
+          bundle-path: build/Build/Products/Release/DontDuckWithMyMac.app
+          # Required version string for the package
+          version: '1.0.0'
+          # Where to save the output
+          output-directory: build/artifacts
 
-      - name: Upload DMG Artifact
+      - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
-          path: DontDuckWithMyMac.dmg
+          # Upload the contents of the output directory
+          path: build/artifacts/
