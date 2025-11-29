@@ -11,7 +11,7 @@ import IOKit.pwr_mgt // Import IOKit for sleep prevention
 
 // 1. Shared state to hold message and active status
 class AppState: ObservableObject {
-    @Published var message: String = "Do Not Duck With My Mac!! It's doing some shit you probably won't even understand, and I'll get sad if it stops."
+    @Published var message: String = "Do Not Duck With My Mac!! It's doing some shit you probably won't even understand, and I'll get really sad if it stops."
     // We track if the shield is active so the Menu Bar button can toggle it
     @Published var isShieldActive: Bool = false
 }
