@@ -43,6 +43,24 @@ jobs:
           mkdir -p build/staging
           cp -R build/Build/Products/Release/DontDuckWithMyMac.app build/staging/
 
+      # FIX: Replaced failing action with native 'hdiutil' command.
+      # This creates a DMG directly from the staging folder.
+      - name: Create DMG
+        run: |
+          hdiutil create \
+            -volname "DontDuck Installer" \
+            -srcfolder "build/staging" \
+            -ov -format UDZO \
+            "build/artifacts/DontDuckWithMyMac.dmg"
+
+      - name: Create Artifacts Directory
+        run: mkdir -p build/artifacts
+
+      - name: Prepare Staging Directory
+        run: |
+          mkdir -p build/staging
+          cp -R build/Build/Products/Release/DontDuckWithMyMac.app build/staging/
+
       - name: Generate macOS Installer (.pkg)
         uses: akiojin/generate-mac-installer-github-action@v1.0.4
         with:
@@ -57,11 +75,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
-          path: build/artifacts/
+          path: build/artifacts/DontDuckWithMyMac.dmg
 
-      # Upload the .pkg to the Release page
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: build/artifacts/DontDuckWithMyMac.pkg
+          files: build/artifacts/DontDuckWithMyMac.dmg
