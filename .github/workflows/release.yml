@@ -47,7 +47,8 @@ jobs:
         uses: akiojin/generate-mac-installer-github-action@v1.0.4
         with:
           root-directory: build/staging
-          bundle-path: build/staging/DontDuckWithMyMac.app
+          # FIX: Use relative path (just the filename) because it is joined with root-directory
+          bundle-path: DontDuckWithMyMac.app
           version: '1.0.0'
           output-directory: build/artifacts
 
@@ -58,7 +59,7 @@ jobs:
           name: DontDuckWithMyMac-Installer
           path: build/artifacts/
 
-      # NEW: Upload the .pkg to the Release page
+      # Upload the .pkg to the Release page
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
