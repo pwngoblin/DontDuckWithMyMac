@@ -52,6 +52,9 @@ jobs:
             -srcfolder "build/staging" \
             -ov -format UDZO \
             "build/artifacts/DontDuckWithMyMac.dmg"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
       - name: Upload DMG Artifact
@@ -59,8 +62,11 @@ jobs:
         with:
           name: DontDuckWithMyMac-Installer
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           path: DontDuckWithMyMac.dmg
 =======
+=======
+>>>>>>> Stashed changes
           path: build/artifacts/DontDuckWithMyMac.dmg
 
       # Upload the .dmg to the Release page
@@ -69,4 +75,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: build/artifacts/DontDuckWithMyMac.dmg
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
