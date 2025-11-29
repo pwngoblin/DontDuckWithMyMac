@@ -28,19 +28,18 @@ jobs:
             CODE_SIGNING_REQUIRED="NO" \
             CODE_SIGNING_ALLOWED="NO"
 
+      - name: Create Artifacts Directory
+        run: mkdir -p build/artifacts
+
       - name: Generate macOS Installer (.pkg)
         uses: akiojin/generate-mac-installer-github-action@v1.0.4
         with:
-          # Correct input for the app bundle
           bundle-path: build/Build/Products/Release/DontDuckWithMyMac.app
-          # Required version string for the package
           version: '1.0.0'
-          # Where to save the output
           output-directory: build/artifacts
 
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
-          # Upload the contents of the output directory
           path: build/artifacts/
