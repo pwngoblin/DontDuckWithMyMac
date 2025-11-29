@@ -19,7 +19,7 @@ class AppState: ObservableObject {
 @main
 struct DontDuckWithMyMacApp: App {
     @StateObject var appState = AppState()
-    
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         // The Main Control Window (Optional now, since we have the menu bar window)
         WindowGroup("Control Panel", id: "ControlPanel") {
