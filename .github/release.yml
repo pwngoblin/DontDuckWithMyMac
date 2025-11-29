@@ -27,26 +27,15 @@ jobs:
             CODE_SIGNING_REQUIRED="NO" \
             CODE_SIGNING_ALLOWED="NO"
 
-      - name: Install create-dmg
-        run: brew install create-dmg
-
-      - name: Create DMG Installer
-        # Uses create-dmg to package the .app into a nice drag-and-drop installer
-        run: |
-          cd build/Build/Products/Release
-          create-dmg \
-            --volname "DontDuck Installer" \
-            --window-pos 200 120 \
-            --window-size 800 400 \
-            --icon-size 100 \
-            --icon "DontDuckWithMyMac.app" 200 190 \
-            --hide-extension "DontDuckWithMyMac.app" \
-            --app-drop-link 600 185 \
-            "DontDuckWithMyMac.dmg" \
-            "DontDuckWithMyMac.app"
+      - name: Generate macOS Installer
+        uses: akiojin/generate-mac-installer-github-action@v1.0.4
+        with:
+          app_path: build/Build/Products/Release/DontDuckWithMyMac.app
+          type: dmg
+          output_name: DontDuckWithMyMac.dmg
 
       - name: Upload DMG Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DontDuckWithMyMac-Installer
-          path: build/Build/Products/Release/DontDuckWithMyMac.dmg
+          path: DontDuckWithMyMac.dmg
